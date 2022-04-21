@@ -50,7 +50,7 @@ module.exports = (config) => {
         },
         output: {
           filename: `${name}.js`,
-          path: path.resolve(__dirname, DIST_DIR),
+          path: path.resolve('./', DIST_DIR),
         },
         performance: {
           hints: false
@@ -65,7 +65,6 @@ module.exports = (config) => {
     } */
     addEntries(inputs, 'main');
     // Output Basic Runtime
-    console.log(`Stats: ${components.length - 1} Components`);
     entries[entries.length - 1].plugins = [];
     if (config.copy) {
       entries[entries.length - 1].plugins.push(
@@ -89,14 +88,14 @@ module.exports = (config) => {
       new ExtraWatchWebpackPlugin({
         files: [
           ...(config.copy || []),
-          'src/index.html'
+          './src/index.html'
         ],
       }),
     );
   
     entries[entries.length - 1].devServer = {
       static: {
-        directory: path.join(__dirname, DIST_DIR)
+        directory: path.join('./', DIST_DIR)
       },
       compress: true,
       port: config.port || 3000
