@@ -11,6 +11,9 @@ module.exports = config({
     watch: [
         'src/**/*.md'
     ],
+    before: (components, mode) => {
+        console.log(`${components.length} Components`);
+    },
     after: (components, mode) => {
         // Run after compilation
         // components = [
