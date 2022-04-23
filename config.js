@@ -94,10 +94,7 @@ module.exports = (config) => {
     );
     entries[entries.length - 1].plugins.push(
       new ExtraWatchWebpackPlugin({
-        files: [
-          ...(config.copy || []),
-          './src/index.html'
-        ],
+        files: config.copy || []
       }),
     );
     entries[entries.length - 1].plugins.push(
