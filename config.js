@@ -1,6 +1,8 @@
 const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
 const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const {
   dashToCamel,
   getComponents
@@ -55,9 +57,15 @@ module.exports = (config) => {
         performance: {
           hints: false
         },
+        stats: {
+          preset: 'errors-warnings',
+        },
+        infrastructureLogging: {
+          level: 'warn',
+        },
       });
     }
-  
+
     /* if (mode === 'production') {
       components.forEach(({ input, name }) => {
         addEntries(input, name);
@@ -92,13 +100,21 @@ module.exports = (config) => {
         ],
       }),
     );
-  
+    entries[entries.length - 1].plugins.push(
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+      })
+    );
+
     entries[entries.length - 1].devServer = {
       static: {
         directory: path.join('./', DIST_DIR)
       },
       compress: true,
-      port: config.port || 3000
+      port: config.port || 3000,
+      client: {
+        logging: 'warn',
+      },
     };
     return entries;
   };

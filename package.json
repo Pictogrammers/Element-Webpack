@@ -1,6 +1,6 @@
 {
   "name": "@pictogrammers/element-webpack",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Shared webpack config for @pictogrammers/element",
   "main": "config.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Pictogrammers/Element-Webpack#readme",
   "dependencies": {
     "copy-webpack-plugin": "^10.2.4",
-    "extra-watch-webpack-plugin": "^1.0.3"
+    "extra-watch-webpack-plugin": "^1.0.3",
+    "html-webpack-plugin": "^5.5.0"
   }
 }
