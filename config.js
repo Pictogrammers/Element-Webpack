@@ -4,9 +4,11 @@ const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const {
-  dashToCamel,
-  getComponents
+  getComponents,
+  getComponentsFromNpmStart
 } = require('./utils');
+
+const args = getComponentsFromNpmStart();
 
 module.exports = (config) => {
 
@@ -16,103 +18,113 @@ module.exports = (config) => {
   const inputs = [];
 
   components.forEach(({ input, examples }) => {
-    inputs.push(input);
+    inputs.push(path.resolve('./', input));
     examples.forEach(({ exampleInput }) => {
-      inputs.push(exampleInput);
+      inputs.push(path.resolve('./', exampleInput));
     });
   });
 
-  return (env, argv) => {
-    const entries = [];
-    const mode = argv.mode === 'production' ? 'production' : 'development';
 
-    if (config.before) {
-      config.before(components, mode);
-    }
+  const entries = [];
+  const mode = 'development';
 
-    function addEntries(input, name) {
-      entries.push({
-        mode: mode,
-        entry: input,
-        module: {
-          rules: [
-            {
-              test: /\.(css|html)$/i,
-              use: 'raw-loader',
-            },
-            {
-              test: /\.ts$/,
-              use: 'ts-loader',
-              exclude: /node_modules/,
-            },
-          ],
-        },
-        resolve: {
-          extensions: ['.ts', '.js'],
-        },
-        output: {
-          filename: `${name}.js`,
-          path: path.resolve('./', DIST_DIR),
-        },
-        performance: {
-          hints: false
-        },
-        stats: {
-          preset: 'errors-warnings',
-        },
-        infrastructureLogging: {
-          level: 'warn',
-        },
-      });
-    }
+  if (config.before) {
+    config.before(components, args, mode);
+  }
 
-    /* if (mode === 'production') {
-      components.forEach(({ input, name }) => {
-        addEntries(input, name);
-      });
-    } */
-    addEntries(inputs, 'main');
-    // Output Basic Runtime
-    entries[entries.length - 1].plugins = [];
-    if (config.copy) {
-      entries[entries.length - 1].plugins.push(
-        new CopyPlugin({
-          patterns: config.copy
-        })
-      );
-    };
-    entries[entries.length - 1].plugins.push(
-      {
-        apply: (compiler) => {
-          compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-            if (config.after) {
-              config.after(components, mode);
-            }
-          });
-        }
+  function addEntries(input, name) {
+    entries.push({
+      mode: mode,
+      entry: input,
+      module: {
+        rules: [
+          {
+            test: /\.(css|html)$/i,
+            use: 'raw-loader',
+          },
+          {
+            test: /\.ts$/,
+            use: 'ts-loader',
+            exclude: /node_modules/,
+          },
+        ],
+      },
+      resolve: {
+        extensions: ['.ts', '.js'],
+      },
+      output: {
+        filename: `${name}.js`,
+        path: path.resolve('./', DIST_DIR),
+      },
+      performance: {
+        hints: false
+      },
+      stats: {
+        preset: 'errors-warnings',
+      },
+      infrastructureLogging: {
+        level: 'warn',
+      },
+    });
+    return entries[entries.length - 1];
+  }
+
+  // Individual *.js for each component (very slow)
+  if (mode === 'production') {
+    components.forEach(({ input, name }) => {
+      addEntries(input, name);
+    });
+  }
+  // main.js Entry
+  const mainEntry = addEntries(inputs, 'main');
+  // Output Basic Runtime
+  mainEntry.plugins = [];
+  if (config.copy) {
+    mainEntry.plugins.push(
+      new CopyPlugin({
+        patterns: config.copy
+      })
+    );
+  };
+  mainEntry.plugins.push(
+    {
+      apply: (compiler) => {
+        compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+          if (config.after) {
+            config.after(components, args, mode);
+          }
+        });
       }
+    }
+  );
+  mainEntry.plugins.push(
+    new ExtraWatchWebpackPlugin({
+      files: config.watch || []
+    }),
+  );
+  if (config.index) {
+    mainEntry.plugins.push(
+      new HtmlWebpackPlugin({
+        templateContent: config.index,
+      })
     );
-    entries[entries.length - 1].plugins.push(
-      new ExtraWatchWebpackPlugin({
-        files: config.copy || []
-      }),
-    );
-    entries[entries.length - 1].plugins.push(
+  } else {
+    mainEntry.plugins.push(
       new HtmlWebpackPlugin({
         template: './src/index.html',
       })
     );
+  }
 
-    entries[entries.length - 1].devServer = {
-      static: {
-        directory: path.join('./', DIST_DIR)
-      },
-      compress: true,
-      port: config.port || 3000,
-      client: {
-        logging: 'warn',
-      },
-    };
-    return entries;
+  mainEntry.devServer = {
+    static: {
+      directory: path.join('./', DIST_DIR)
+    },
+    compress: true,
+    port: config.port || 3000,
+    client: {
+      logging: 'warn',
+    },
   };
+  return entries;
 };

@@ -123,7 +123,7 @@ exports.eachComponent = (srcDir, callback) => {
         const namespaceU = `${namespace[0].toUpperCase()}${namespace.substr(1)}`;
         const name = `${namespace}${componentU}`;
         const cls = `${namespaceU}${componentU}`;
-        const input = `./src/${namespace}/${component}/${component}.ts`;
+        const input = path.join(srcDir, namespace, component, `${component}.ts`);
         callback({
           cls,
           name,
@@ -147,7 +147,7 @@ exports.eachComponent = (srcDir, callback) => {
     }
   }]
  */
-exports.getComponents = function(srcDir) {
+exports.getComponents = function (srcDir) {
   const srcDir2 = srcDir
     ? path.join('./', srcDir)
     : path.join('./');
@@ -158,15 +158,15 @@ exports.getComponents = function(srcDir) {
     const namespaceDir = path.join(srcDir2, namespace);
     const comps = fs.readdirSync(namespaceDir)
       .filter((f) => f.match(/^[a-zA-Z0-9]+$/) !== null);
-      comps.forEach((component) => {
+    comps.forEach((component) => {
       const componentDir = path.join(namespaceDir, component);
       const file = path.join(componentDir, `${component}.ts`);
       if (fs.existsSync(file)) {
-        const name = `${namespace}${component[0].toUpperCase()}${component.substr(1)}`;
-        const input = `./src/${namespace}/${component}/${component}.ts`;
+        const name = `${namespace}${component[0].toUpperCase()}${component.substring(1)}`;
+        const input = path.join(srcDir2, namespace, component, `${component}.ts`);
         components.push({ input, name, namespace, component });
         components[components.length - 1].examples = [];
-        const examplesDir = `${componentDir}/__examples__`;
+        const examplesDir = path.join(componentDir, '__examples__');
         if ((fs.existsSync(examplesDir))) {
           const examples2 = fs.readdirSync(examplesDir)
             .filter((f) => f.match(/^[a-zA-Z0-9]+$/) !== null);
@@ -187,10 +187,34 @@ exports.getComponents = function(srcDir) {
   return components;
 };
 
-exports.dashToCamel = function(str) {
-  return str.replace(/-([a-z])/g, m => m[1].toUpperCase());
-};
 
-exports.camelToDash = function(str) {
+function dashToCamel(str) {
+  return str.replace(/-([a-z])/g, m => m[1].toUpperCase());
+}
+
+exports.dashToCamel = dashToCamel;
+
+function camelToDash(str) {
   return str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
-};
+}
+
+exports.camelToDash = camelToDash;
+
+/**
+ * npm start pgButton, button
+ *
+ * @returns Array of component string names. Ex: ['pgButton']
+ */
+exports.getComponentsFromNpmStart = function () {
+  if (process.argv.length > 2 && process.argv[2]) {
+    const aComp = process.argv.slice(2).join(' ');
+    const aComps = aComp.split(/(?:,\s*|\s+)/g);
+    aComps.forEach((aC) => {
+      if (aC.match(/^\w+([A-Z]|-)/) === null) {
+        throw new Error(`${aC} must be formatted as namespace-component or namespaceComponent`);
+      }
+    });
+    return aComps.map(x => dashToCamel(x));
+  }
+  return [];
+}

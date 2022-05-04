@@ -1,6 +1,6 @@
 {
   "name": "@pictogrammers/element-webpack",
-  "version": "0.1.8",
+  "version": "0.1.17",
   "description": "Shared webpack config for @pictogrammers/element",
   "main": "config.js",
   "scripts": {
@@ -16,6 +16,11 @@
     "url": "https://github.com/Pictogrammers/Element-Webpack/issues"
   },
   "homepage": "https://github.com/Pictogrammers/Element-Webpack#readme",
+  "bin": {
+    "element-start": "./bin/element-start.js",
+    "element-build": "./bin/element-build.js",
+    "element-publish": "./bin/element-publish.js"
+  },
   "dependencies": {
     "copy-webpack-plugin": "^10.2.4",
     "extra-watch-webpack-plugin": "^1.0.3",
