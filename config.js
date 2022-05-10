@@ -87,6 +87,13 @@ module.exports = (config) => {
     );
   };
   mainEntry.plugins.push(
+    new CopyPlugin({
+      patterns: [
+        { from: "src/favicon.svg", to: `favicon.svg` }
+      ]
+    })
+  );
+  mainEntry.plugins.push(
     {
       apply: (compiler) => {
         compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
@@ -105,7 +112,9 @@ module.exports = (config) => {
   if (config.index) {
     mainEntry.plugins.push(
       new HtmlWebpackPlugin({
-        templateContent: config.index,
+        templateContent: () => {
+          return config.index(components, args, mode);
+        },
       })
     );
   } else {
