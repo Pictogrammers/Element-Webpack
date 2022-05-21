@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const CopyPlugin = require("copy-webpack-plugin");
 const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -86,10 +87,17 @@ module.exports = (config) => {
       })
     );
   };
+  const favicon = config.favicon || 'favicon.svg';
+  const favFile = fs.existsSync(path.join('src', favicon))
+    ? path.join('src', favicon)
+    : path.join(__dirname, 'default', 'favicon.svg');
   mainEntry.plugins.push(
     new CopyPlugin({
       patterns: [
-        { from: "src/favicon.svg", to: `favicon.svg` }
+        {
+          from: favFile,
+          to: `favicon.svg`
+        }
       ]
     })
   );

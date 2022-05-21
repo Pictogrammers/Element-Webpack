@@ -1,6 +1,6 @@
 {
   "name": "@pictogrammers/element-webpack",
-  "version": "0.1.21",
+  "version": "0.1.23",
   "description": "Shared webpack config for @pictogrammers/element",
   "main": "config.js",
   "scripts": {
