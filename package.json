@@ -1,6 +1,6 @@
 {
   "name": "@pictogrammers/element-webpack",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Shared webpack config for @pictogrammers/element",
   "main": "config.js",
   "scripts": {
@@ -27,6 +27,8 @@
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.8.1",
+    "raw-loader": "^4.0.2",
+    "ts-loader": "^9.2.8"
   }
 }
