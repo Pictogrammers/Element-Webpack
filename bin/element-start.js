@@ -23,6 +23,7 @@ server.startCallback((err) => {
         console.log(err.name, red(err.message));
         if (err.stack) {
             console.log(err.stack);
+            process.exit(1);
         }
     } else {
         console.log('Server', bold(green(`http://localhost:${server.options.port}`)));

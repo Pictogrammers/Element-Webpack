@@ -17,6 +17,7 @@ compiler.run((err, result) => {
     if (err) {
         console.log('Build', bold(red('Failed')));
         console.log(err.message, err.stack);
+        process.exit(1);
     } else {
         console.log('Build', bold(green('Successful')));
     }
