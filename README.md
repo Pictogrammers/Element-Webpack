@@ -7,6 +7,7 @@ const config = require('@pictogrammers/element-webpack');
 
 module.exports = config({
     port: 3000,
+    src: 'src',
     dist: 'dist',
     watch: [
         'src/**/*.md'
@@ -42,6 +43,7 @@ module.exports = config({
 | Option | Default | Description |
 | ------ | ------- | ----------- |
 | `port` | `3000` | localhost port |
+| `src`  | `src`  | Source folder for components, `favicon.svg`, and `index.html` |
 | `dist` | `dist` | Distribution folder. Defaults to `dist` |
 | `watch` | `[]`  | Array of additional files to watch. Glob string format. |
 | `after` | `null` | Run additional code after every compilation. |

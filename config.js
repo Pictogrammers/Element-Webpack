@@ -15,7 +15,8 @@ module.exports = (config) => {
 
   const DIST_DIR = config.dist || 'dist';
 
-  const components = getComponents('src');
+  const src = config.src || 'src';
+  const components = getComponents(src);
   const inputs = [];
 
   components.forEach(({ input, examples }) => {
@@ -88,8 +89,8 @@ module.exports = (config) => {
     );
   };
   const favicon = config.favicon || 'favicon.svg';
-  const favFile = fs.existsSync(path.join('src', favicon))
-    ? path.join('src', favicon)
+  const favFile = fs.existsSync(path.join(src, favicon))
+    ? path.join(src, favicon)
     : path.join(__dirname, 'default', 'favicon.svg');
   mainEntry.plugins.push(
     new CopyPlugin({
@@ -128,7 +129,7 @@ module.exports = (config) => {
   } else {
     mainEntry.plugins.push(
       new HtmlWebpackPlugin({
-        template: './src/index.html',
+        template: `./${src}/index.html`,
       })
     );
   }
