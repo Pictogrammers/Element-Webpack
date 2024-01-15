@@ -9,7 +9,7 @@ const webpackConfig = require(config);
 
 const compiler = Webpack(webpackConfig);
 
-const bold = (text) => '\033[1m' + text + '\033[0m';
+const bold = (text) => '\x1b[1m' + text + '\x1b[0m';
 const green = (text) => '\x1b[32m' + text + '\x1b[0m';
 const red = (text) => '\x1b[31m' + text + '\x1b[0m';
 

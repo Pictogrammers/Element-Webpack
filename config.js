@@ -27,7 +27,7 @@ module.exports = (config) => {
 
 
   const entries = [];
-  const mode = 'development';
+  const mode = config.mode || 'development';
 
   if (config.before) {
     config.before(components, args, mode);
@@ -73,7 +73,7 @@ module.exports = (config) => {
   // Individual *.js for each component (very slow)
   if (mode === 'production') {
     components.forEach(({ input, name }) => {
-      addEntries(input, name);
+      addEntries(`./${input}`, name);
     });
   }
   // main.js Entry
