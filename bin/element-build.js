@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-import { resolve } from 'path';
-import { readFileSync } from 'fs';
 import Webpack from 'webpack';
 
 const { default: webpackConfig } = await import('./../../../../webpack.config.js');
+
+// Always production for builds
+webpackConfig.forEach(entry => { entry.mode = 'production' });
 
 const compiler = Webpack(webpackConfig);
 

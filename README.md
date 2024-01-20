@@ -33,8 +33,10 @@ module.exports = config({
         // mode = 'production' | 'development'
     },
     copy: [
-        { from: "folder/", to: `folder/` },
+        { from: 'src/styles.css', to: 'styles.css' },
     ]
+    // Shorthand copy for the above
+    // copy: [ 'src/styles.css' ]
 });
 ```
 
@@ -46,5 +48,6 @@ module.exports = config({
 | `src`  | `src`  | Source folder for components, `favicon.svg`, and `index.html` |
 | `dist` | `dist` | Distribution folder. Defaults to `dist` |
 | `watch` | `[]`  | Array of additional files to watch. Glob string format. |
-| `after` | `null` | Run additional code after every compilation. |
 | `copy` | `[]` | Copy over additional folders or files to the `dist` folder. |
+| `before` | `null` | Run additional code after before every compilation. |
+| `after` | `null` | Run additional code after every compilation. |
