@@ -1,17 +1,19 @@
-const path = require('path');
-const fs = require('fs');
-const CopyPlugin = require("copy-webpack-plugin");
-const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import { join, resolve, dirname } from 'path';
+import fs from 'fs';
+import CopyPlugin from "copy-webpack-plugin";
+import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { fileURLToPath } from 'url';
 
-const {
+import {
   getComponents,
   getComponentsFromNpmStart
-} = require('./utils');
+} from './utils.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const args = getComponentsFromNpmStart();
 
-module.exports = (config) => {
+export default function (config) {
 
   const DIST_DIR = config.dist || 'dist';
 
@@ -20,9 +22,9 @@ module.exports = (config) => {
   const inputs = [];
 
   components.forEach(({ input, examples }) => {
-    inputs.push(path.resolve('./', input));
+    inputs.push(resolve('./', input));
     examples.forEach(({ exampleInput }) => {
-      inputs.push(path.resolve('./', exampleInput));
+      inputs.push(resolve('./', exampleInput));
     });
   });
 
@@ -56,7 +58,7 @@ module.exports = (config) => {
       },
       output: {
         filename: `${name}.js`,
-        path: path.resolve('./', DIST_DIR),
+        path: resolve('./', DIST_DIR),
       },
       performance: {
         hints: false
@@ -89,9 +91,9 @@ module.exports = (config) => {
     );
   };
   const favicon = config.favicon || 'favicon.svg';
-  const favFile = fs.existsSync(path.join(src, favicon))
-    ? path.join(src, favicon)
-    : path.join(__dirname, 'default', 'favicon.svg');
+  const favFile = fs.existsSync(join(src, favicon))
+    ? join(src, favicon)
+    : join(__dirname, 'default', 'favicon.svg');
   mainEntry.plugins.push(
     new CopyPlugin({
       patterns: [
@@ -136,7 +138,7 @@ module.exports = (config) => {
 
   mainEntry.devServer = {
     static: {
-      directory: path.join('./', DIST_DIR)
+      directory: join('./', DIST_DIR)
     },
     compress: true,
     port: config.port || 3000,

@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-const path = require('path');
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
+import Webpack from 'webpack';
 
-const Webpack = require('webpack');
-
-const config = path.resolve('./', 'webpack.config.js');
-const webpackConfig = require(config);
+const { default: webpackConfig } = await import('./../../../../webpack.config.js');
 
 const compiler = Webpack(webpackConfig);
 

@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 
-const path = require('path');
+import Webpack from 'webpack';
+import WebpackDevServer from 'webpack-dev-server';
 
-const Webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
-
-const config = path.resolve('./', 'webpack.config.js');
-const webpackConfig = require(config);
+const { default: webpackConfig } = await import('./../../../../webpack.config.js');
 
 const compiler = Webpack(webpackConfig);
 
