@@ -3,7 +3,13 @@
 import Webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 
-const { default: webpackConfig } = await import('./../../../../webpack.config.js');
+import { join, relative, dirname, sep } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const config = relative(__dirname, join(process.cwd(), 'webpack.config.js'));
+const fixedConfig = config.split(sep).join('/');
+const { default: webpackConfig } = await import(fixedConfig);
 
 const compiler = Webpack(webpackConfig);
 

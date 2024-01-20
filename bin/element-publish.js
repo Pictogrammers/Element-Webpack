@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
-import { resolve } from 'path';
-import { readFileSync } from 'fs';
 import Webpack from 'webpack';
+import { resolve, join, relative, dirname, sep } from 'path';
+import { fileURLToPath } from 'url';
 
-const config = resolve('./', 'webpack.config.js');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const config = relative(__dirname, join(process.cwd(), 'webpack.config.js'));
+const fixedConfig = config.split(sep).join('/');
+const { default: webpackConfig } = await import(fixedConfig);
 
-// Always Production for Publish
-const { default: webpackConfig } = await import('./../../../../webpack.config.js');
+// Always production for builds
+webpackConfig.forEach(entry => { entry.mode = 'production' });
 
 const compiler = Webpack(webpackConfig);
 
