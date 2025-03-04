@@ -43,8 +43,30 @@ export default function (config) {
       module: {
         rules: [
           {
-            test: /\.(css|html)$/i,
-            use: 'raw-loader',
+            test: /\.css$/i,
+            use: [{
+              loader: "css-loader",
+              options: {
+                exportType: "css-style-sheet",
+              },
+            }],
+          },
+          {
+            test: /\.html$/i,
+            use: [{
+              loader: 'html-loader',
+              options: {
+                minimize: true,
+                sources: {
+                  urlFilter: (attribute, value, resourcePath) => {
+                    if (/favicon.svg$/.test(value)) {
+                      return false;
+                    }
+                    return true;
+                  },
+                },
+              },
+            }],
           },
           {
             test: /\.ts$/,
