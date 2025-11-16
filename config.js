@@ -3,6 +3,7 @@ import fs from 'fs';
 import CopyPlugin from "copy-webpack-plugin";
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 import { fileURLToPath } from 'url';
 
 import {
@@ -90,6 +91,14 @@ export default function (config) {
       },
       infrastructureLogging: {
         level: 'warn',
+      },
+      optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin({
+          terserOptions: {
+            keep_classnames: true
+          }
+        })],
       },
     });
     return entries[entries.length - 1];
