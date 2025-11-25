@@ -194,6 +194,10 @@ export function camelToDash(str) {
  */
 export function getComponentsFromNpmStart() {
   if (process.argv.length > 2 && process.argv[2]) {
+    // Only care about `npm start namespaceHelloWorld`
+    if (!process.argv[1].endsWith('element-start.js')) {
+      return [];
+    }
     const aComp = process.argv.slice(2).join(' ');
     const aComps = aComp.split(/(?:,\s*|\s+)/g);
     aComps.forEach((aC) => {

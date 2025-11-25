@@ -46,6 +46,9 @@ export default function (config) {
           {
             test: /\.css$/i,
             use: [{
+              loader: "style-loader",
+              options: { injectType: "singletonStyleTag" },
+            }, {
               loader: "css-loader",
               options: {
                 exportType: "css-style-sheet",
