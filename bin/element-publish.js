@@ -5,7 +5,7 @@ import { resolve, join, relative, dirname, sep } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const config = relative(__dirname, join(process.cwd(), 'webpack.config.js'));
+const config = relative(__dirname, join(process.cwd(), 'webpack.publish.config.js'));
 const fixedConfig = config.split(sep).join('/');
 const { default: webpackConfig } = await import(fixedConfig);
 
