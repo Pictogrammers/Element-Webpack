@@ -18,12 +18,15 @@ const bold = (text) => '\x1b[1m' + text + '\x1b[0m';
 const green = (text) => '\x1b[32m' + text + '\x1b[0m';
 const red = (text) => '\x1b[31m' + text + '\x1b[0m';
 
+const start = Math.floor(Date.now() / 1000);
+
 compiler.run((err, result) => {
+    const total = Math.floor(Date.now() / 1000) - start;
     if (err) {
-        console.log('Build', bold(red('Failed')));
+        console.log('Build', bold(red('Failed')), `${total}s`);
         console.log(err.message, err.stack);
     } else {
-        console.log('Build', bold(green('Successful')));
+        console.log('Build', bold(green('Successful')), `${total}s`);
         console.log('Run...');
         console.log('┌─────────────┐');
         console.log('│ cd publish  │');

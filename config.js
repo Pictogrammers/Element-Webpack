@@ -71,8 +71,12 @@ export default function (config) {
           },
           {
             test: /\.ts$/,
-            use: 'ts-loader',
-            exclude: /node_modules/,
+            use: [{
+              loader: 'ts-loader',
+              options: {
+                allowTsInNodeModules: true,
+              }
+            }],
           },
         ],
       },
@@ -114,7 +118,7 @@ export default function (config) {
   const mainEntry = addEntries(inputs, 'main');
   // Output Basic Runtime
   mainEntry.plugins = [];
-  if (config.copy) {
+  if (config.copy && config.copy.length > 0) {
     mainEntry.plugins.push(
       new CopyPlugin({
         patterns: config.copy
