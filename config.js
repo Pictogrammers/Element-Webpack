@@ -147,6 +147,13 @@ export default function (config) {
             config.after(components, args, mode);
           }
         });
+        compiler.hooks.watchRun.tap('WatchRunPlugin', (module) => {
+          if (module.modifiedFiles.size) {
+            if (config.update) {
+              config.update(Array.from(module.modifiedFiles));
+            }
+          }
+        });
       }
     }
   );
