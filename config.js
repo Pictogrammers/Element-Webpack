@@ -1,4 +1,4 @@
-import { join, resolve, dirname } from 'path';
+import { join, resolve, dirname, relative } from 'path';
 import fs from 'fs';
 import CopyPlugin from "copy-webpack-plugin";
 import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
@@ -150,7 +150,9 @@ export default function (config) {
         compiler.hooks.watchRun.tap('WatchRunPlugin', (module) => {
           if (module.modifiedFiles.size) {
             if (config.update) {
-              config.update(Array.from(module.modifiedFiles));
+              config.update(Array.from(module.modifiedFiles).map((toPath) => {
+                return relative('./', toPath);
+              }));
             }
           }
         });
