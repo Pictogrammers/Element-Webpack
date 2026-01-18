@@ -1,5 +1,7 @@
 # Element Webpack Config
 
+> ⚠️ DEPRECATED! [Use `@pictogrammers/element-esbuild`](https://github.com/Pictogrammers/Element-esbuild).
+
 Shared webpack configuration for use with `@pictogrammers/element` package.
 
 ```javascript
